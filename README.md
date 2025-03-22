@@ -7,4 +7,4 @@ Un semplice script per esportare in formato `.csv` tutti i titoli disponibili da
 
 ## Google Colab
 
-Lo script è dispobile qui
+Lo script è dispobile anche su Google Colab [a questo link](https://colab.research.google.com/github/riccardosalemme/qloudscuola-books-export/blob/main/qloud-scuola-export.ipynb)
