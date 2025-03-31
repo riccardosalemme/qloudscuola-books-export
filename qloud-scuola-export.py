@@ -1,7 +1,8 @@
 #################################### SETTINGS ####################################
 
 # url della piattaforma (ricordarsi la / finale)
-url = "http://icpertinibusto.myqloud.eu/"
+domain = "icpertinibusto.myqloud.eu"
+url = f"http://{domain}/"
 
 # immettere un valore anche superiore al numero di pagine (il programma si interrompe in automatico)
 max_page = 1000
@@ -23,7 +24,7 @@ import pandas as pd
 headers = {
     'Accept': 'application/json',
     'Accept-Language': 'it-IT,it;q=0.9',
-    'Host': 'icpertinibusto.myqloud.eu',
+    'Host': domain,
     'User-Agent': user_agent,
     'Referer': url,
 }
@@ -42,13 +43,16 @@ def get_book_data(book_id: str):
     data = response.json()['responseData']['record']
 
     barcodes = []
+    instituteLibraries = []
     available_copies = 0
     for x in data['items']:
         barcodes.append(x['barcode'])
+        instituteLibraries.append(x['location']['name'])
         if(x['status']['id'] == "available"):
             available_copies += 1
 
     barcodes = "-".join(barcodes)
+    instituteLibraries = "-".join(instituteLibraries)
 
     return {
         "title" : data['title'].replace("/", "").replace(":", "").strip(),
@@ -58,7 +62,11 @@ def get_book_data(book_id: str):
         "id" : data['id'],
         "copies" : len(data['items']),
         "barcodes" : barcodes,
-        "availableCopies" : available_copies
+        "availableCopies" : available_copies,
+        "instituteLibraries" : instituteLibraries,
+        "localCallNumber" : data['items'][0]['localCallNumber'] if len(data['items']) != 0 else "",
+        "media" : data['items'][0]['media']['name'] if len(data['items']) != 0 and data['items'][0]['media'] else "",
+        "collection" : data['items'][0]['collection']['name'] if len(data['items']) != 0 and data['items'][0]['collection'] else "",
     }
 
 
